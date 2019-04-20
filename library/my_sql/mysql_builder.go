@@ -35,6 +35,9 @@ type MysqlBuilder struct {
 	Builder                             // 塞入一个构建器
 	bindings        map[string][]string // 绑定的操作符与列名之间的映射
 	columns         []string            // 列名()
+	count           bool                //是否用到count查询
+	countColumns    string              // count列
+	countAlias      string              // count别名
 	distinct        bool                // 是否用到了去重查询
 	distinctColumns []string            // 唯一的列
 	from            string              // 表名
@@ -52,13 +55,26 @@ type MysqlBuilder struct {
 	unionOffset     string
 	unionOrders     string
 	lock            bool
-	operator        int // 操作符
+	operator        int
+	// 操作符
 }
 
 func NewMysqlBuilder() IBuilder {
 	b := &MysqlBuilder{}
 	b.operator = SelectOperator
 	return b
+}
+
+// 偏移量
+func (m *MysqlBuilder) Offset(o int) IBuilder {
+	m.limit = o
+	return m
+}
+
+// 条数限制
+func (m *MysqlBuilder) Limit(l int) IBuilder {
+	m.limit = l
+	return m
 }
 
 // 去重
@@ -504,6 +520,15 @@ func (m *MysqlBuilder) OrderByDesc(column string) IBuilder {
 	return m
 }
 
+// 获取Count总数
+func (m *MysqlBuilder) Count(column string, alias string) IResult {
+	m.count = true
+	m.countColumns = column
+	m.countAlias = alias
+
+	return m.Get()
+}
+
 // 获取结果集
 func (m *MysqlBuilder) Get() IResult {
 	var values []interface{}
@@ -560,7 +585,11 @@ func selectAssembly(m *MysqlBuilder) (string, []interface{}) {
 	}
 	// 拼接列
 	if len(m.columns) == 0 {
-		s += ` * `
+		if m.count {
+			s += ` COUNT(` + m.countColumns + `) AS ` + m.countAlias + ` `
+		} else {
+			s += ` * `
+		}
 	} else {
 		s += strings.Join(m.columns, ",")
 	}

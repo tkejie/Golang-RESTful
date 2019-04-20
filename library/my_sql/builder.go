@@ -13,6 +13,8 @@ type IBuilder interface {
 	GetConn() *sql.DB
 	Distinct(columns ...string) IBuilder     // 去重方法
 	Where(condition ...interface{}) IBuilder // 条件语句
+	Offset(offset int) IBuilder              // 偏移量
+	Limit(limit int) IBuilder                // 条数限制
 	//WhereCondition(columnName string, f func()) IBuilder // where语句，传入一个回调
 
 	OrderByDesc(column string) IBuilder
@@ -31,7 +33,7 @@ type IBuilder interface {
 	//Find(id int) IResult
 	//Pluck(column string) []interface{} // 传入一个列名，返回这个列的所有数据
 	//Value(column string) interface{}   // 从单行中得到单独一个列的数据
-	//Count(column string) IResult
+	Count(column string, alias string) IResult
 	//Max(column string) IResult
 	//Avg(column string) IResult
 	//Min(column string) IResult
@@ -272,6 +274,18 @@ func (b *Builder) InsertManyModels(models []interface{}) IResult {
 }
 
 func (b *Builder) InsertMap(d map[string]interface{}) IResult {
+	return nil
+}
+
+func (b *Builder) Limit(limit int) IBuilder {
+	return nil
+}
+
+func (b *Builder) Offset(offset int) IBuilder {
+	return nil
+}
+
+func (b *Builder) Count(column string, alias string) IResult {
 	return nil
 }
 
