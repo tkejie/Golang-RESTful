@@ -67,7 +67,7 @@ func NewMysqlBuilder() IBuilder {
 
 // 偏移量
 func (m *MysqlBuilder) Offset(o int) IBuilder {
-	m.limit = o
+	m.offset = o
 	return m
 }
 

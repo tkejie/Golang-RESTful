@@ -22,12 +22,30 @@ var routes = Routes{
 		"Index",
 		"GET",
 		"/",
-		Index,
+		BugList,
+	},
+	Route{
+		"Index",
+		"GET",
+		"/_buglist",
+		BugList,
 	},
 	Route{
 		"Hello",
 		"GET",
-		"/hello",
-		Hello,
+		"/_uplist",
+		UpList,
+	},
+	Route{
+		"CreateBug",
+		"POST",
+		"/bug/create",
+		Create,
+	},
+	Route{
+		"CreateUpdate",
+		"POST",
+		"/update/create",
+		Update,
 	},
 }

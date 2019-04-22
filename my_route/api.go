@@ -5,40 +5,62 @@
 package my_route
 
 import (
-	"Golang-RESTful/library/my_config"
 	"Golang-RESTful/library/my_log"
-	"Golang-RESTful/library/my_sql"
 	"Golang-RESTful/models"
 	"encoding/json"
 	"net/http"
 )
 
-func Index(w http.ResponseWriter, r *http.Request) {
+type MyStruct struct {
+	Name string
+	Age  int64
+}
 
-	my_config.InitConfig("./config.conf")
-	config := my_config.Run()
+func BugList(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm() //解析url传递的参数，对于POST则解析响应包的主体（request body）
+	res := models.GetBugList(r.Form)
 
-	m := my_sql.NewConnector(config)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
 
-	res := m.Table("test").Where("name", "宁").Count("id", "total")
-
-	lists := models.Lists{
-		models.Index{Id: 1, Name: "Kejie", Data: res.ToStringMapList()},
-	}
-
-	if err := json.NewEncoder(w).Encode(lists); err != nil {
+	if err := json.NewEncoder(w).Encode(res); err != nil {
 		my_log.Error("%v", err)
 	}
 }
 
-func Hello(w http.ResponseWriter, r *http.Request) {
-	my_config.InitConfig("./config.conf")
-	config := my_config.Run()
+func UpList(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm() //解析url传递的参数，对于POST则解析响应包的主体（request body）
+	res := models.GetUpdateList(r.Form)
 
-	m := my_sql.NewConnector(config)
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+	w.WriteHeader(http.StatusOK)
 
-	res := m.Table("test").Where("name", "宁").Count("id", "total")
+	if err := json.NewEncoder(w).Encode(res); err != nil {
+		my_log.Error("%v", err)
+	}
 
-	json.NewEncoder(w).Encode(res.ToStringMapList())
+}
 
+func Create(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm() //解析url传递的参数，对于POST则解析响应包的主体（request body）
+	//注意:如果没有调用ParseForm方法，下面无法获取表单的数据
+	res := models.BuildBugData(r.Form)
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	if err := json.NewEncoder(w).Encode(res); err != nil {
+		my_log.Error("%v", err)
+	}
+}
+
+func Update(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm() //解析url传递的参数，对于POST则解析响应包的主体（request body）
+	//注意:如果没有调用ParseForm方法，下面无法获取表单的数据
+	res := models.BuildUpdateData(r.Form)
+
+	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
+
+	if err := json.NewEncoder(w).Encode(res); err != nil {
+		my_log.Error("%v", err)
+	}
 }
