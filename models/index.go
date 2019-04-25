@@ -103,7 +103,7 @@ func BuildBugData(data map[string][]string) Return {
 }
 
 /**
-  插入Bug表
+  插入Update表
  */
 func BuildUpdateData(data map[string][]string) Return {
 	if _, ok := data["edition_info"]; !ok {
@@ -118,22 +118,22 @@ func BuildUpdateData(data map[string][]string) Return {
 			Msg:  "缺少必传参数:edition_desc",
 		}
 	}
-	if _, ok := data["bug_uptime"]; !ok {
+	if _, ok := data["edition_uptime"]; !ok {
 		return Return{
 			Code: 500,
-			Msg:  "缺少必传参数:bug_uptime",
+			Msg:  "缺少必传参数:edition_uptime",
 		}
 	}
-	if _, ok := data["bug_entrustor"]; !ok {
+	if _, ok := data["edition_entrustor"]; !ok {
 		return Return{
 			Code: 500,
-			Msg:  "缺少必传参数:bug_entrustor",
+			Msg:  "缺少必传参数:edition_entrustor",
 		}
 	}
-	if _, ok := data["bug_remarks"]; !ok {
+	if _, ok := data["edition_remarks"]; !ok {
 		return Return{
 			Code: 500,
-			Msg:  "缺少必传参数:bug_remarks",
+			Msg:  "缺少必传参数:edition_remarks",
 		}
 	}
 
@@ -146,12 +146,12 @@ func BuildUpdateData(data map[string][]string) Return {
 
 	a["edition_info"] = strings.Join(data["edition_info"], "")
 	a["edition_desc"] = strings.Join(data["edition_desc"], "")
-	a["bug_uptime"] = strings.Join(data["bug_uptime"], "")
-	a["bug_entrustor"] = strings.Join(data["bug_entrustor"], "")
-	a["bug_remarks"] = strings.Join(data["bug_remarks"], "")
+	a["edition_uptime"] = strings.Join(data["edition_uptime"], "")
+	a["edition_entrustor"] = strings.Join(data["edition_entrustor"], "")
+	a["edition_remarks"] = strings.Join(data["edition_remarks"], "")
 	a["created_at"] = time.Now().Format("2006-01-02 15:04:05")
 
-	res := m.Table("l_bug").InsertMap(a)
+	res := m.Table("l_update").InsertMap(a)
 
 	if len(res.GetErrors()) != 0 {
 		my_log.Error("插入bug表出现问题", res.GetErrors())

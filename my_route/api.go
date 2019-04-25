@@ -20,6 +20,8 @@ func BugList(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm() //解析url传递的参数，对于POST则解析响应包的主体（request body）
 	res := models.GetBugList(r.Form)
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -29,9 +31,11 @@ func BugList(w http.ResponseWriter, r *http.Request) {
 }
 
 func UpList(w http.ResponseWriter, r *http.Request) {
-	r.ParseForm() //解析url传递的参数，对于POST则解析响应包的主体（request body）
+	r.ParseForm() //解析url传递的参数，对于BuildBugDataPOST则解析响应包的主体（request body）
 	res := models.GetUpdateList(r.Form)
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 	w.WriteHeader(http.StatusOK)
 
@@ -46,6 +50,8 @@ func Create(w http.ResponseWriter, r *http.Request) {
 	//注意:如果没有调用ParseForm方法，下面无法获取表单的数据
 	res := models.BuildBugData(r.Form)
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	if err := json.NewEncoder(w).Encode(res); err != nil {
@@ -58,6 +64,8 @@ func Update(w http.ResponseWriter, r *http.Request) {
 	//注意:如果没有调用ParseForm方法，下面无法获取表单的数据
 	res := models.BuildUpdateData(r.Form)
 
+	w.Header().Set("Access-Control-Allow-Origin", "*")             //允许访问所有域
+	w.Header().Add("Access-Control-Allow-Headers", "Content-Type") //header的类型
 	w.Header().Set("Content-Type", "application/json; charset=UTF-8")
 
 	if err := json.NewEncoder(w).Encode(res); err != nil {
